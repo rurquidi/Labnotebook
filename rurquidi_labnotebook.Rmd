@@ -1,0 +1,39 @@
+---
+title: "Lab notebook"
+author: "Ricardo Urquidi Camacho"
+date: "June 12, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+# Date Tuesday, June 12 2018
+
+Project GCN2:
+
+Broad Status: 
+- Basic TX data analysis using LIMMA and GO has been performed
+- Still need to redo TL analysis for NP, SP and LP fractions as well as TLS. 
+- Need to do TX "meta analysis" across conditions which have an effect through GCN2
+- Create User defined clusters for TX and TL and run GO on these
+
+
+
+
+
+
+
+
+
+
+
+
+
