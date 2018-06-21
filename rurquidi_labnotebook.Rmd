@@ -9,21 +9,159 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+#Overview
+## Projects
+### Ribosome
+Consists of fitting a model of Ribosome loading to microarray data collected by separating transcripts by ribosome load using sucrose gradient sedimentation.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+### GCN2
+Analysis of TX and TL microarray produced from WT (Ler) and _gcn2_ plants treated with either mock or herbicide (Chlorsulfuron). TX data is from total RNA and TL data is from 3 fractions of Total RNA separated using sucrose gradient sedimentation. Fraction 1 is non-polysomal (NP), Fraction 2 is Small polysomal (SP), and fraction 3 is Large plolysoma (LP).
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+### RNASeq
+This is a  test run for RNA seq data collected by Ansul. WT (Col-0) seedlings were treated with mock or sucrose for 2H. Total RNA was collected and then treated with ribo-zero and run on a nextseq @ pe ~30 million fragment read depth.
+
+### Network
+Missra 2015 CCA1 data as well as branco price 2008 hypoxia data as analyzed by network analysis. Cleaning up and building data sets for collaborator analysis.
 
 # Date Tuesday, June 12 2018
 
+Overview:
+- Decided on RMarkdown as the platform for my lab notebook
+- Created Repositories for GCN2 and labnotebook, still need to set up for other projects. Find repo at [rurquidi Github](https://github.com/rurquidi).
+- Tried to pay for private repositories with lab account. Was denied. Contacted Sherry Roberts in the Biology Business office about purchasing private repos.
+- Set up files to act as detailed "protocols" and records for GCN2 TX and TL analysis. The plan is to create a separate source file containing functions for microarray analysis and a TX and TL specific file showing the data analysis.
+
+Project Ribosome:
+Broad Status For the week of 20180611:
+- Run model fits on data that has had batch effects removed to see if this indeed has an effect.
+- Finish re-analysis of Data using Bioinformatics approach.
+- Finish evaluation of model fitting algorithms
+- Re fit model to data for larger number of genes
+
+Notes
+- Cancelled meeting with Mike on 20180613 due to lack of progress
+
 Project GCN2:
 
-Broad Status: 
+Broad Status For the week of 20180611: 
 - Basic TX data analysis using LIMMA and GO has been performed
 - Still need to redo TL analysis for NP, SP and LP fractions as well as TLS. 
 - Need to do TX "meta analysis" across conditions which have an effect through GCN2
 - Create User defined clusters for TX and TL and run GO on these
+
+Notes:
+- Talked to Ansul about Genevestigator and Cold Stress. This is for a separate paper
+- He will setup another Genevestigator account, which will allow me to search for experiments.
+-Talked to Albrecht about TX_DEG.xlsx file email (sent 20180610). Mean and SD columns in the filtered data sheet referenced the wrong columns. this was fixed
+
+# Date Wednesday, June 13 2018
+Project GCN2:
+Goal: Run TL Data analysis. Produce Limma DEG for NP, SP, LP and TLS. Begin assembling excel file and GO analysis
+
+Notes: Create new Microarray Functions.R file in src folder for future use. also began filling out the GCN2_TL_analysis file which will act as a registry of how to perform the analysis. A private account was purchased for Github. Now the Gcn2 folder is private. Albrecht and Sung Ki have gained access to the folder. Ansul has yet to get an account. 
+
+# Date Thursday, June 14 2018
+Project GCN2:
+Goal: Run TL Data analysis. Produce Limma DEG for NP, SP, LP and TLS. Begin assembling excel file and GO analysis
+
+Experiment: Began re-running analysis for TL. Can be found in dates results folder under results/TL/gcrma/2018-06-14.
+
+Notes: Finished Polishing and reanalysis of NP TL data, raw data and gcrma correlation plots.
+
+# Date Friday, June 15 2018
+Project GCN2:
+Goal Finish TL data, meet with Albrecht.
+
+Notes: Met with Albrecht and swithced objective to focus on the user specified list of gene patterns.
+
+Experiment: User defined lists, cluster and expression analysis
+
+Notes: The first step of the user defined analysis. The first question is how to differentiate between "flat" genes and differentially expressed genes. I approached this with two options. The first is to simply include all genes found to be differentially expressed by Limma at a FDR value <0.05. This was done by extracting all the probenames from each contrast results (WTH-WTC,GCNH-GCNC,GCNC-WTC,GCNH-GCNC,and Diff) and then keeping only the unique instances of each. Using this method I found a total of 6,583 probes to be significantly different in their gene expression in at least one of the comparissons specified above. 
+
+Another possible method for determining which genes to keep is performing the topTableF function from limma. This is essentially the same as the ANOVA F test for differences in means, however this is moderated using the eBayes function. This only produces 5,750 genes.
+
+A final approach is to choose all genes and select on the lfc between genes without regard to their significance or the amount of noise in the measurement. This is not recommended.
+
+#Date Monday, Jun 18 2018
+Project GCN2:
+Goal Produce user defined lists.
+
+Notes: Trying to choose how to define a proper base set of genes for analysis. It is surprising that the Ftest result yields fewer results than the individual contrasts. After reading online this can be explained away by considering that contrasts only focus on two particular conditions. These might be significantly different with small enough within sample sd. However other conditions might have higher within sample sd and when compared with an omnibus test, might appear as non significant. I have yet to analyze the data thoroughly, but I do see this happening in some cases. More worryingly is the small subset of Ftest genes found to be DE, but not in the contrasts. I am not yet sure as to why this happens.
+
+Asked Albrecht what he thinks and he said he really doesn't see an issue with it. I can choose any of the options presented in the June 15 notes, or use only the set of genes found by bothe limma and the ftest (5476).
+
+
+#Date Tuesday, Jun 19 2018
+Project GCN2:
+Goal Produce user defined lists.
+
+Notes. Produced user defined list using the 6,583 genes from limma and a  cutoff of 1.3 lfc. Made excel spreadsheets containing the lfc, AGI, gcrma replicates, and mean values. GO was run on all the sets produced using Albrecht notes, finally gene annotations were included. These Scenarios were:
+
+- Scenario I |GCNH-GCNC| < 1.3 & |GCNC-WTC| < 1.3 & |GCNH-WTH| > 1.3 or in other words only |WTH-WTC| > 1.3
+- Scenario II |WTH-WTC| == |GCNH - GCNC| >1.3
+- Scenario III|WTH-WTc| < 1.3 & |GCNH - GCNC| >1.3
+- Scenario IV WTH-WTc = - (GCNH - GCNC) and both >1.3
+- Scenario V  Everything else
+
+Results in 2018-06-19 folder under TX gcrma
+
+Met briefly with Albrecht were he noted two things, first he meant for me to do the analysis with an **FC** cutoff of 1.3 **NOT AN LFC** cutoff of 1.3 have to redo the analysis. Secondly, He noted that the heatmaps did not look like how he would imagine. Take for example the heatmap of scenarioI.
+
+![ScenarioI heatmap](/Users/AVALAB/Documents/utk/Research/Labnotebook/Labnotebook/Figures/20180619_Scenario_I_heatmap.png)
+
+Scenario I seeks to find genes that are only changed in WTC and not in any other condition. This means that blocks corresponding to WTC, GCNC, GCNH should look very similar. However this is not obvious in the heatmap above. The blocks are not only of different colors but patchy.
+
+### Experiment
+Started reanalysis of data using FC of 1.3 some results are in 2018-06-19. 
+
+
+#Date Wednesday, June 20 2018
+Project GCN2:
+Goal Produce user defined lists.
+
+Notes: Redoing all the analysis from 2018-06-19. 
+Have an idea of how to better represent the results: make a heatmap of FC or lfc not z scored heatmap of the gcrma batch corrected data. The reason for this is twofold. First, we are intersted in showing the differences between conditions within the genes, not in how the genes fluctuate within a condition. Secondly the z-scoring of the genes directly goes against the desired effect. As can be shown by the code below.
+
+```{r z score example}
+test1 <- c(6.5,6.15,5.85,6)
+(test1-mean(test1))/sd(test1)
+
+test2 <- c(12,6.15,5.85,6)
+(test2-mean(test2))/sd(test2)
+
+test3 <- c(2,6.15,5.85,6)
+(test3-mean(test3))/sd(test3)
+```
+
+The results are:
+for test 1 (6.5,6.15,5.85,6)
+1.34703977  0.08980265 -0.98782916 -0.44901326
+
+for test 2 (12,6.15,5.85,6)
+1.4987516 -0.4496255 -0.5495422 -0.4995839
+
+for test 3 (2,6.15,5.85,6)
+-1.4971954  0.5739249  0.4242054  0.4990651
+
+comapare the wide fluctuations in the z score values of the relatively constant and not differentially expressed group of genes represented by the last 3 numbers. How the z score represents them depends on the differentially expressed 1st value. a small amount of differential expression usually yields a more unstable z score for the non-DEG. This will be exacerbated in the current analysis as many of the genes included will only have a small FC. also note that as the degree of Differential expression is greater that the z score represents the results in the desired manner. 
+
+
+Met with albrecht. He still prefers the z score version and likes both the heatmap with the replicates and the means. Finds that the LFC heatmap is ok, but more difficult to explain and not how he thinks of the data. Going forward I will finish with all 3 heatmaps and do GO. GO will be general GO and also for up and down regulated genes individually.
+
+Experiment: Repeated user defined sets analysis for all scenarios. I used the the intersection between the LIMMA DEG genes and the F-test significant genes. This comes out to a total of 5,476 genes. I ran all scenarios as proposed by Albrecht with the additional caveat that GCNC-WTC < 1.3 FC. This produced crisp results. Still need to make the presentation and the excel sheets.
+
+Note: Talked to Albrecht at the end of the day and I will add 4 additional scenarios. These will be identical to the first 4, but with GCNC-WTC > 1.3 FC. Scenario V: everything else, will become scenario IX. All scenario I-IV found in 2018-06-20 folder.
+
+#Date Thursday, June 21 2018
+Project GCN2:
+Goal Produce user defined lists.
+
+Notes: It is important to note that the presence of any 1 gene in any of these scenarios is not guaranteed to be significant. While a gene might have been found to be significant in an omnibus test or in the contrasts, being significant for a single contrast is enough to be included in all the lists. It could very well be possible that a gene was significant for a particular contrast in a group filtering for that contrast would be ok, but is not significant for a different contrast in a different filtering group. I.e. don't treat all genes as significant. We will need to trim down these lists to make them useful and I would be weary of interpreting any of these filtered groups with any confidence until only significant genes are kept.
+
+
+
+
+
 
 
 
